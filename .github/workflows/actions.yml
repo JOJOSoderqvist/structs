@@ -1,0 +1,33 @@
+name: structs_workflow
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  run-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Go for linter
+        uses: actions/checkout@v4
+      - name: Checkout action
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - name: Run linters
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.64
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Go for tests
+        uses: actions/setup-go@v5
+      - name: Checkout action
+        uses: actions/checkout@v4
+      - name: Get deps
+        run: go mod tidy
+      - name: Run tests
+        run: go test ./...
